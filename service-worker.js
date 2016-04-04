@@ -1,10 +1,11 @@
-const CACHE_KEY = 'v4';
+const CACHE_KEY = 'v5';
 
 self.addEventListener('install', e => {
   e.waitUntil(
     caches.open(CACHE_KEY).then(cache => {
       return cache.addAll([
         '/',
+        '/manifest.json',
         '/js/app.js',
         '/js/dom-delegate.js',
         '/css/app.css',
@@ -95,9 +96,7 @@ self.addEventListener('activate', e => {
 self.addEventListener('fetch', e => {
   e.respondWith(
     caches.open(CACHE_KEY).then(cache => {
-      return cache.match(e.request).then(response => {
-        return response || fetch(e.request);
-      });
+      return cache.match(e.request);
     }).catch(e => console.error(e))
   );
 });
