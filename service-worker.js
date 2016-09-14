@@ -1,4 +1,4 @@
-const CACHE_KEY = '20160617';
+const CACHE_KEY = '20160914';
 
 self.addEventListener('install', e => {
   e.waitUntil(
@@ -111,7 +111,10 @@ self.addEventListener('fetch', e => {
     caches.open(CACHE_KEY).then(cache => {
       return cache.match(e.request).then(response => {
         return response || fetch(e.request.clone()).then(response => {
-          cache.put(e.request, response.clone());
+          const url = new URL(e.request.url);
+          if (url.protocol === 'https:') {
+            cache.put(e.request, response.clone());
+          }
         });
       });
     }).catch(e => console.error(e))
